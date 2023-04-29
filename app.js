@@ -1,9 +1,11 @@
 const express = require("express")
 const app = express()
+const connectDB = require("./db/connect")
 
 const productsRouter = require("./routes/products")
 
 require("dotenv").config()
+require("express-async-errors")
 
 const port = process.env.PORT || 3000
 
@@ -22,8 +24,9 @@ app.use("/api/v1/products", productsRouter)
 app.use(notFound)
 app.use(errorHandler)
 
-const start = ()=>{
+const start = async ()=>{
     try {
+        await connectDB(process.env.MONGO_CONNECTION_STRING)
         app.listen(port, ()=>{
             console.log(`Server is running on ${port}`)
         })
