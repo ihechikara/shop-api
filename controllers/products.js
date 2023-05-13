@@ -19,7 +19,7 @@ const getAllProducts = async (req, res) =>{
     let result = Product.find(queryObject)
 
     if(sort){
-        const sortList = sort.split(" ").join(" ")
+        const sortList = sort.split(",").join(" ")
         result = result.sort(sortList)
     } else{
         result = result.sort("createdAt")
