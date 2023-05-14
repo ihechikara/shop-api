@@ -18,6 +18,7 @@ const getAllProducts = async (req, res) =>{
 
     let result = Product.find(queryObject)
 
+    // sort response
     if(sort){
         const sortList = sort.split(",").join(" ")
         result = result.sort(sortList)
@@ -25,10 +26,18 @@ const getAllProducts = async (req, res) =>{
         result = result.sort("createdAt")
     }
 
+    // select specific data fields to return
     if(select){
         const selectList = select.split(",").join(" ")
         result = result.select(selectList)
     }
+
+    const page = Number(req.query.page) || 1
+    const limit = Number(req.query.limit) || 10
+    const skip = (page - 1) * limit
+
+    result = result.skip(skip).limit(limit)
+
     const products = await result
 
     res.status(200).json({products, numOfProducts: products.length})
